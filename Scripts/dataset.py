@@ -21,7 +21,7 @@ class ImageDataset(Dataset):
 
         vector_field = torch.from_numpy(sitk.GetArrayFromImage(sitk.ReadImage(vector_field_path))).permute(2,0,1).to(device)*1000.0
         mask = torch.from_numpy(sitk.GetArrayFromImage(sitk.ReadImage(mask_path))).permute(1,0)
-        boundary_mask = torch.where(torch.from_numpy(filters.laplace(mask))>0,1,0)
+        boundary_mask = torch.where(torch.from_numpy(filters.laplace(mask.numpy())) > 0, 1, 0)
         mask = (mask-boundary_mask).to(device)
 
         sample = {  'vector_field'  : vector_field,

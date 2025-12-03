@@ -8,4 +8,4 @@ sizes: 145 174 3
 kinds: domain domain vector 
 endian: little
 encoding: gzip
-data file: ./dti_all_tensor_rreg_60_2D.raw.gz
+data file: 100610_orig_tensors.raw.gz

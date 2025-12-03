@@ -1,5 +1,14 @@
 # for data vis methods
 # When using itkwidgets, must import itk directly.  It doesn't play nice with lazy_imports
+import numpy as np
+import sys
+
+# Fix for np.bool deprecation
+if hasattr(np, 'bool'):
+    pass
+else:
+    np.bool = np.bool_
+
 import itk
 from lazy_imports import sitk, np, linalg
 from lazy_imports import plt, PatchCollection, Ellipse, EllipseCollection
