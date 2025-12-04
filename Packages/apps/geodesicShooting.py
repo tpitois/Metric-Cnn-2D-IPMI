@@ -1,6 +1,6 @@
 import os.path
 
-from lazy_imports import np
+import numpy as np
 from . import appTypes
 from util import YAMLcfg
 from data import io

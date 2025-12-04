@@ -1,5 +1,7 @@
 # Basic data generation methods, including filling/setting operations
-from lazy_imports import sitk, np, torch
+import numpy as np
+import torch
+import SimpleITK as sitk
 from . import constants as dc
 import math
 

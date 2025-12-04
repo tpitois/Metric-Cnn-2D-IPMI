@@ -1,13 +1,12 @@
 import math
 from util.tensors import *
-from lazy_imports import np
-from lazy_imports import torch
+import numpy as np
+import torch
 from util import diff, maskops, riemann, tensors
 from data import io
 from tqdm import tqdm
 
-from numba import jit
-import pdb
+
 # uncomment this for legit @profile when not using kernprof
 def profile(blah):                
   return blah

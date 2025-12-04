@@ -1,7 +1,7 @@
 import math
-from lazy_imports import np
-from lazy_imports import torch
-from lazy_imports import sitk
+import numpy as np
+import torch
+import SimpleITK as sitk
 from data.convert import get_framework, GetNPArrayFromSITK, GetSITKImageFromNP
 from numba import jit, njit, prange
 

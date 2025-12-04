@@ -1,7 +1,5 @@
-from lazy_imports import np
+import numpy as np
 import math
-# from util.tensors import tens_interp, tens_interp_3d, vect_interp_2d, vect_interp_3d, eigen_vec, eigen_vec_3d
-# from util.tensors import direction, direction_3d
 from util.tensors import *
 from data import io
 from util import diff, riemann

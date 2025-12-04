@@ -1,5 +1,5 @@
-from lazy_imports import np
-from lazy_imports import savemat
+import numpy as np
+from scipy.io import savemat
 from data.io import ReadTensors, ReadScalars, WriteTensorNPArray, WriteScalarNPArray
 from algo import euler, geodesic
 import algo.metricModSolver as mms

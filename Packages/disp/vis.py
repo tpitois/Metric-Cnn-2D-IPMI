@@ -9,19 +9,20 @@ if hasattr(np, 'bool'):
 else:
     np.bool = np.bool_
 
-import itk
-from lazy_imports import sitk, np, linalg
-from lazy_imports import plt, PatchCollection, Ellipse, EllipseCollection
-from lazy_imports import ipywidgets as widg
-from lazy_imports import itkview #itkwidgets.view
-from lazy_imports import pv # pyvista
-from lazy_imports import interactive
-from lazy_imports import ipywidgets
+import SimpleITK as sitk
+
+import matplotlib.pyplot as plt
+from matplotlib.collections import PatchCollection, EllipseCollection
+from matplotlib.patches import Ellipse
+
+import ipywidgets as widg
+
+import pyvista as pv
+from itkwidgets import view as itkview
 from data.convert import GetSITKImageFromNP, GetNPArrayFromSITK, GetNPArrayViewFromSITK
 from data.io import readRaw
 
 import algo.geodesic as geo
-import algo.euler as euler
 
 # TODO worth breaking into separate files based on image type?
 #      ie vis_sitk.py, vis_np.py etc?

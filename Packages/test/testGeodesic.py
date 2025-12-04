@@ -1,4 +1,3 @@
-from lazy_imports import np, loadmat
 from util import YAMLcfg
 from disp.vis import vis_ellipses
 from apps import geodesicShooting as gs

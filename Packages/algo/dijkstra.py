@@ -1,4 +1,5 @@
-from lazy_imports import np
+import numpy as np
+
 from data import io
 
 class Adjacency:

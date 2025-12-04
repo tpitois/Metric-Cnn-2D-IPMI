@@ -1,4 +1,5 @@
-from lazy_imports import np, ndimage
+import numpy as np
+from scipy import ndimage
 from data.convert import get_framework
 
 def is_interior_pt_2d(ii, jj, mask):

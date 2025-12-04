@@ -5,8 +5,9 @@ from util import YAMLcfg
 from disp.vis import vis_tensors, vis_path, disp_scalar_to_file
 from disp.vis import  disp_vector_to_file, disp_tensor_to_file
 from disp.vis import disp_gradG_to_file, disp_gradA_to_file
-from lazy_imports import plt, np
-from lazy_imports import savemat
+from matplotlib import pyplot as plt
+import numpy as np
+from scipy.io import savemat
 from util.parsers import parseMetricEstStdout
 import pickle
 from data.io import WriteTensorNPArray, WriteScalarNPArray

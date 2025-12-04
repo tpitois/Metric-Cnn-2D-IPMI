@@ -1,5 +1,5 @@
-from lazy_imports import np
-from lazy_imports import torch
+import numpy as np
+import torch
 from util import diff
 from data.convert import get_framework
 

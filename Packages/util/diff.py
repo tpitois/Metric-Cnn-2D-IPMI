@@ -1,4 +1,5 @@
-from lazy_imports import np, torch
+import numpy as np
+import torch
 from util import maskops as mo
 from data.convert import get_framework
 

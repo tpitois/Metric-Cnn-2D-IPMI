@@ -1,4 +1,6 @@
-from lazy_imports import sitk, np, torch
+import numpy as np
+import torch
+import SimpleITK as sitk
 
 # TODO add package name to the naming convention here, once identify a good package name!!
 IM_TYPE_PY = 0

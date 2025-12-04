@@ -1,4 +1,6 @@
-from lazy_imports import np, sitk, torch
+import numpy as np
+import torch
+import SimpleITK as sitk
 
 # Note that when SimpleITK converts to/from numpy, it also transposes the data
 # So let's create our own routines that address that.  We want internal consistency here as best
