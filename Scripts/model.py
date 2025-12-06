@@ -4,10 +4,11 @@ Reference:
     https://github.com/pytorch/vision/blob/master/torchvision/models/densenet.py
 """
 
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
+
 plt.switch_backend('agg')
 
 
@@ -25,10 +26,10 @@ class UpsamplingNearest2d(nn.Module):
     def __init__(self, scale_factor=2.):
         super().__init__()
         self.scale_factor = scale_factor
-    
+
     def forward(self, x):
         return F.interpolate(x, scale_factor=self.scale_factor, mode='nearest')
-    
+
 
 class UpsamplingBilinear2d(nn.Module):
     def __init__(self, scale_factor=2.):
@@ -36,8 +37,8 @@ class UpsamplingBilinear2d(nn.Module):
         self.scale_factor = scale_factor
 
     def forward(self, x):
-        return F.interpolate(x, scale_factor=self.scale_factor, 
-            mode='bilinear', align_corners=True)
+        return F.interpolate(x, scale_factor=self.scale_factor,
+                             mode='bilinear', align_corners=True)
 
 
 class _DenseLayer(nn.Sequential):
@@ -50,6 +51,7 @@ class _DenseLayer(nn.Sequential):
             `growth_rate`
         bottleneck (bool, False): If True, enable bottleneck design
     """
+
     def __init__(self, in_features, growth_rate, drop_rate=0., bn_size=8,
                  bottleneck=False):
         super(_DenseLayer, self).__init__()
@@ -57,19 +59,19 @@ class _DenseLayer(nn.Sequential):
             self.add_module('norm1', nn.BatchNorm2d(in_features))
             self.add_module('relu1', nn.ReLU(inplace=True))
             self.add_module('conv1', nn.Conv2d(in_features, bn_size *
-                            growth_rate, kernel_size=1, stride=1, bias=False))
+                                               growth_rate, kernel_size=1, stride=1, bias=False))
             self.add_module('norm2', nn.BatchNorm2d(bn_size * growth_rate))
             self.add_module('relu2', nn.ReLU(inplace=True))
             self.add_module('conv2', nn.Conv2d(bn_size * growth_rate, growth_rate,
-                            kernel_size=3, stride=1, padding=1, bias=False))
+                                               kernel_size=3, stride=1, padding=1, bias=False))
         else:
             self.add_module('norm1', nn.BatchNorm2d(in_features))
             self.add_module('relu1', nn.ReLU(inplace=True))
             self.add_module('conv1', nn.Conv2d(in_features, growth_rate,
-                            kernel_size=3, stride=1, padding=1, bias=False))
+                                               kernel_size=3, stride=1, padding=1, bias=False))
         if drop_rate > 0:
             self.add_module('dropout', nn.Dropout2d(p=drop_rate))
-        
+
     def forward(self, x):
         y = super(_DenseLayer, self).forward(x)
         return torch.cat([x, y], 1)
@@ -87,7 +89,7 @@ class _DenseBlock(nn.Sequential):
 
 
 class _Transition(nn.Sequential):
-    def __init__(self, in_features, out_features, down, bottleneck=True, 
+    def __init__(self, in_features, out_features, down, bottleneck=True,
                  drop_rate=0, upsample='nearest'):
         """Transition layer, either downsampling or upsampling, both reduce
         number of feature maps, i.e. `out_features` should be less than 
@@ -107,7 +109,7 @@ class _Transition(nn.Sequential):
             if bottleneck:
                 # bottleneck impl, save memory, add nonlinearity
                 self.add_module('conv1', nn.Conv2d(in_features, out_features,
-                    kernel_size=1, stride=1, padding=0, bias=False))
+                                                   kernel_size=1, stride=1, padding=0, bias=False))
                 if drop_rate > 0:
                     self.add_module('dropout1', nn.Dropout2d(p=drop_rate))
                 self.add_module('norm2', nn.BatchNorm2d(out_features))
@@ -115,12 +117,12 @@ class _Transition(nn.Sequential):
                 # self.add_module('pool', nn.AvgPool2d(kernel_size=2, stride=2))
                 # not using pooling, fully convolutional...
                 self.add_module('conv2', nn.Conv2d(out_features, out_features,
-                    kernel_size=3, stride=2, padding=1, bias=False))
+                                                   kernel_size=3, stride=2, padding=1, bias=False))
                 if drop_rate > 0:
                     self.add_module('dropout2', nn.Dropout2d(p=drop_rate))
             else:
                 self.add_module('conv1', nn.Conv2d(in_features, out_features,
-                    kernel_size=3, stride=2, padding=1, bias=False))
+                                                   kernel_size=3, stride=2, padding=1, bias=False))
                 if drop_rate > 0:
                     self.add_module('dropout1', nn.Dropout2d(p=drop_rate))
         else:
@@ -128,7 +130,7 @@ class _Transition(nn.Sequential):
             if bottleneck:
                 # bottleneck impl, save memory, add nonlinearity
                 self.add_module('conv1', nn.Conv2d(in_features, out_features,
-                    kernel_size=1, stride=1, padding=0, bias=False))
+                                                   kernel_size=1, stride=1, padding=0, bias=False))
                 if drop_rate > 0:
                     self.add_module('dropout1', nn.Dropout2d(p=drop_rate))
 
@@ -143,11 +145,11 @@ class _Transition(nn.Sequential):
                 elif upsample == 'bilinear':
                     self.add_module('upsample', UpsamplingBilinear2d(scale_factor=2))
                     self.add_module('conv2', nn.Conv2d(out_features, out_features,
-                        3, 1, 1, bias=False))
+                                                       3, 1, 1, bias=False))
                 elif upsample == 'nearest':
                     self.add_module('upsample', UpsamplingNearest2d(scale_factor=2))
                     self.add_module('conv2', nn.Conv2d(out_features, out_features,
-                        3, 1, 1, bias=False))
+                                                       3, 1, 1, bias=False))
 
                 if drop_rate > 0:
                     self.add_module('dropout2', nn.Dropout2d(p=drop_rate))
@@ -166,8 +168,8 @@ def last_decoding(in_features, out_channels, bias=False, drop_rate=0., upsample=
     last_up = nn.Sequential()
     last_up.add_module('norm1', nn.BatchNorm2d(in_features))
     last_up.add_module('relu1', nn.ReLU(True))
-    last_up.add_module('conv1', nn.Conv2d(in_features, in_features // 2, 
-                    kernel_size=3, stride=1, padding=1, bias=False))
+    last_up.add_module('conv1', nn.Conv2d(in_features, in_features // 2,
+                                          kernel_size=3, stride=1, padding=1, bias=False))
     if drop_rate > 0.:
         last_up.add_module('dropout1', nn.Dropout2d(p=drop_rate))
     last_up.add_module('norm2', nn.BatchNorm2d(in_features // 2))
@@ -180,11 +182,11 @@ def last_decoding(in_features, out_channels, bias=False, drop_rate=0., upsample=
     elif upsample == 'bilinear':
         last_up.add_module('upsample', UpsamplingBilinear2d(scale_factor=2))
     last_up.add_module('conv2', nn.Conv2d(in_features // 2, in_features // 4,
-        kernel_size=3, stride=1, padding=1, bias=bias))
+                                          kernel_size=3, stride=1, padding=1, bias=bias))
     last_up.add_module('norm3', nn.BatchNorm2d(in_features // 4))
     last_up.add_module('relu3', nn.ReLU(True))
     last_up.add_module('conv3', nn.Conv2d(in_features // 4, out_channels,
-        kernel_size=5, stride=1, padding=2, bias=bias))
+                                          kernel_size=5, stride=1, padding=2, bias=bias))
     return last_up
 
 
@@ -209,7 +211,7 @@ def activation(name):
 
 class DenseED(nn.Module):
     def __init__(self, in_channels, out_channels, imsize, blocks, growth_rate=16,
-                 init_features=48, drop_rate=0, bn_size=8, bottleneck=False, 
+                 init_features=48, drop_rate=0, bn_size=8, bottleneck=False,
                  out_activation=None, upsample='nearest'):
         """Dense Convolutional Encoder-Decoder Networks.
         Decoder: Upsampling + Conv instead of TransposeConv 
@@ -230,7 +232,7 @@ class DenseED(nn.Module):
         super(DenseED, self).__init__()
         if len(blocks) > 1 and len(blocks) % 2 == 0:
             raise ValueError('length of blocks must be an odd number, but got {}'
-                            .format(len(blocks)))
+                             .format(len(blocks)))
         enc_block_layers = blocks[: len(blocks) // 2]
         dec_block_layers = blocks[len(blocks) // 2:]
 
@@ -239,24 +241,24 @@ class DenseED(nn.Module):
         # First convolution, half image size ================
         # For even image size: k7s2p3, k5s2p2
         # For odd image size (e.g. 65): k7s2p2, k5s2p1, k13s2p5, k11s2p4, k9s2p3
-        self.features.add_module('In_conv', nn.Conv2d(in_channels, init_features, 
-                              kernel_size=7, stride=2, padding=pad, bias=False))
+        self.features.add_module('In_conv', nn.Conv2d(in_channels, init_features,
+                                                      kernel_size=7, stride=2, padding=pad, bias=False))
         # Encoding / transition down ================
         # dense block --> encoding --> dense block --> encoding
         num_features = init_features
         for i, num_layers in enumerate(enc_block_layers):
             block = _DenseBlock(num_layers=num_layers,
                                 in_features=num_features,
-                                bn_size=bn_size, 
+                                bn_size=bn_size,
                                 growth_rate=growth_rate,
-                                drop_rate=drop_rate, 
+                                drop_rate=drop_rate,
                                 bottleneck=bottleneck)
             self.features.add_module('EncBlock%d' % (i + 1), block)
             num_features = num_features + num_layers * growth_rate
 
             trans_down = _Transition(in_features=num_features,
                                      out_features=num_features // 2,
-                                     down=True, 
+                                     down=True,
                                      drop_rate=drop_rate)
             self.features.add_module('TransDown%d' % (i + 1), trans_down)
             num_features = num_features // 2
@@ -265,30 +267,30 @@ class DenseED(nn.Module):
         for i, num_layers in enumerate(dec_block_layers):
             block = _DenseBlock(num_layers=num_layers,
                                 in_features=num_features,
-                                bn_size=bn_size, 
+                                bn_size=bn_size,
                                 growth_rate=growth_rate,
-                                drop_rate=drop_rate, 
+                                drop_rate=drop_rate,
                                 bottleneck=bottleneck)
             self.features.add_module('DecBlock%d' % (i + 1), block)
             num_features += num_layers * growth_rate
             # the last decoding layer has different convT parameters
             if i < len(dec_block_layers) - 1:
                 trans_up = _Transition(in_features=num_features,
-                                    out_features=num_features // 2,
-                                    down=False, 
-                                    drop_rate=drop_rate,
-                                    upsample=upsample)
+                                       out_features=num_features // 2,
+                                       down=False,
+                                       drop_rate=drop_rate,
+                                       upsample=upsample)
                 self.features.add_module('TransUp%d' % (i + 1), trans_up)
                 num_features = num_features // 2
-        
+
         # The last decoding layer =======
-        last_trans_up = last_decoding(num_features, out_channels, 
-            drop_rate=drop_rate, upsample=upsample)
+        last_trans_up = last_decoding(num_features, out_channels,
+                                      drop_rate=drop_rate, upsample=upsample)
         self.features.add_module('LastTransUp', last_trans_up)
 
         if out_activation is not None:
             self.features.add_module(out_activation, activation(out_activation))
-        
+
         print('# params {}, # conv layers {}'.format(
             *self.model_size))
 
@@ -323,13 +325,14 @@ class Decoder(nn.Module):
     Decoder to solve one PDE
     Use nearest upsampling + Conv2d to replace TransposedConv2d
     """
-    def __init__(self, dim_latent, out_channels, blocks, 
-        growth_rate=16, init_features=48, drop_rate=0., upsample='nearest',
-        out_activation=None):
+
+    def __init__(self, dim_latent, out_channels, blocks,
+                 growth_rate=16, init_features=48, drop_rate=0., upsample='nearest',
+                 out_activation=None):
         super(Decoder, self).__init__()
         self.features = nn.Sequential()
         self.features.add_module('conv0', nn.Conv2d(dim_latent, init_features, 3, 1, 1, bias=False))
-        num_features = init_features 
+        num_features = init_features
         for i, num_layers in enumerate(blocks):
             block = _DenseBlock(num_layers=num_layers,
                                 in_features=num_features,
@@ -340,16 +343,16 @@ class Decoder(nn.Module):
             # the last decoding layer has different convT parameters
             if i < len(blocks) - 1:
                 trans_up = _Transition(in_features=num_features,
-                                    out_features=num_features // 2,
-                                    down=False, 
-                                    drop_rate=drop_rate,
-                                    upsample=upsample)
+                                       out_features=num_features // 2,
+                                       down=False,
+                                       drop_rate=drop_rate,
+                                       upsample=upsample)
                 self.features.add_module('TransUp%d' % (i + 1), trans_up)
                 num_features = num_features // 2
-        
+
         # The last decoding layer =======
-        last_trans_up = last_decoding(num_features, out_channels, 
-            drop_rate=drop_rate, upsample=upsample)
+        last_trans_up = last_decoding(num_features, out_channels,
+                                      drop_rate=drop_rate, upsample=upsample)
         self.features.add_module('LastTransUp', last_trans_up)
 
         if out_activation is not None:

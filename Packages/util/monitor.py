@@ -10,6 +10,7 @@
 # python imports
 import time
 
+
 # Timing utilities
 class Timer():
     """ Timer class is a utility to measure running time.  
@@ -20,13 +21,14 @@ class Timer():
     reset will clear the timer and start over
     timesofar will prvode the accumulated run time so far across all pauses since the last reset
     """
+
     def __init__(self, auto_start=True):
         self.start_time = 0
         self.stop = 1
         self.cum_time = 0
         if auto_start:
             self.start()
-    
+
     def start(self):
         self.resume()
 

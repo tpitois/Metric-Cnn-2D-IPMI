@@ -1,11 +1,20 @@
-itk==5.2.0
-lazy_import==0.2.2
-matplotlib==3.3.1
-numba==0.55.1
+# Core numerical and data libraries
 numpy==1.19.5
+scipy
 PyYAML==6.0
-scikit_image==0.18.3
-SimpleITK==2.2.1
-skimage==0.0
+
+# Deep Learning
 torch==1.10.2
+
+# Image Processing and IO
+SimpleITK==2.2.1
+scikit-image==0.18.3
+itk
+
+
+# Visualization and Plotting
+matplotlib==3.3.1
 tqdm==4.55.0
+ipywidgets
+pyvista
+itkwidgets

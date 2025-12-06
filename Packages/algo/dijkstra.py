@@ -2,6 +2,7 @@ import numpy as np
 
 from data import io
 
+
 class Adjacency:
     def __init__(self, a, b, dist):
         self.a = a
@@ -15,6 +16,7 @@ class Edge:
         self.next = next
         self.weight = weight
 
+
 class Vertex:
     def __init__(self, idx, x, y, neighbors, dists):
         # dists is the dist to each associated neighbor
@@ -27,96 +29,98 @@ class Vertex:
         self.visited = False
         self.dist_to_start = np.inf
 
+
 def const_vertex_list(mask, eps11, eps12, eps22):
-  #     inverse
-  eps_11 = eps22 / (eps11*eps22 - eps12*eps12)
-  eps_12 = -eps12 / (eps11*eps22 - eps12*eps12)
-  eps_22 = eps11 / (eps11*eps22 - eps12*eps12)
+    #     inverse
+    eps_11 = eps22 / (eps11 * eps22 - eps12 * eps12)
+    eps_12 = -eps12 / (eps11 * eps22 - eps12 * eps12)
+    eps_22 = eps11 / (eps11 * eps22 - eps12 * eps12)
 
-  #eps_11 = eps11
-  #eps_12 = eps12
-  #eps_22 = eps22
-  
-  verts = {}
-  #neighbor = np.array([[-1, -1],
-  #                    [-1, 0],
-  #                    [-1, 1],
-  #                    [0, -1],
-  #                    [0, 1],
-  #                    [1, -1],
-  #                    [1, 0],
-  #                    [1, 1]])
-  neighbor = np.array([[-1, 0],
-                       [0, -1],
-                       [0, 1],
-                       [1, 0],
-                       [-1, -1],
-                       [-1, 1],
-                       [1, -1],
-                       [1, 1]])
+    # eps_11 = eps11
+    # eps_12 = eps12
+    # eps_22 = eps22
 
-  for x in range(mask.shape[0]):
-    for y in range(mask.shape[1]):
-      if mask[x,y]:
-        idx = np.ravel_multi_index([x,y],mask.shape)
-        ns = []
-        dists = []
-        for j in range(neighbor.shape[0]):
-          if mask[x+neighbor[j, 0], y+neighbor[j, 1]]:
-            eps11_itp = (eps_11[x + neighbor[j, 0], y + neighbor[j, 1]] +
-                         eps_11[x, y]) / 2
-            eps12_itp = (eps_12[x + neighbor[j, 0], y + neighbor[j, 1]] +
-                         eps_12[x, y]) / 2
-            eps22_itp = (eps_22[x + neighbor[j, 0], y + neighbor[j, 1]] +
-                         eps_22[x, y]) / 2
-            ns.append(np.ravel_multi_index([x + neighbor[j,0], y + neighbor[j,1]], mask.shape))
-            dists.append(np.sqrt(neighbor[j, 0] ** 2 * eps11_itp + \
-                                 2 * neighbor[j, 0] * neighbor[j, 1] * eps12_itp + \
-                                 neighbor[j, 1] ** 2 * eps22_itp))
-        verts[idx] = Vertex(idx, x, y, ns, dists)
-  return(verts)
-    
+    verts = {}
+    # neighbor = np.array([[-1, -1],
+    #                    [-1, 0],
+    #                    [-1, 1],
+    #                    [0, -1],
+    #                    [0, 1],
+    #                    [1, -1],
+    #                    [1, 0],
+    #                    [1, 1]])
+    neighbor = np.array([[-1, 0],
+                         [0, -1],
+                         [0, 1],
+                         [1, 0],
+                         [-1, -1],
+                         [-1, 1],
+                         [1, -1],
+                         [1, 1]])
+
+    for x in range(mask.shape[0]):
+        for y in range(mask.shape[1]):
+            if mask[x, y]:
+                idx = np.ravel_multi_index([x, y], mask.shape)
+                ns = []
+                dists = []
+                for j in range(neighbor.shape[0]):
+                    if mask[x + neighbor[j, 0], y + neighbor[j, 1]]:
+                        eps11_itp = (eps_11[x + neighbor[j, 0], y + neighbor[j, 1]] +
+                                     eps_11[x, y]) / 2
+                        eps12_itp = (eps_12[x + neighbor[j, 0], y + neighbor[j, 1]] +
+                                     eps_12[x, y]) / 2
+                        eps22_itp = (eps_22[x + neighbor[j, 0], y + neighbor[j, 1]] +
+                                     eps_22[x, y]) / 2
+                        ns.append(np.ravel_multi_index([x + neighbor[j, 0], y + neighbor[j, 1]], mask.shape))
+                        dists.append(np.sqrt(neighbor[j, 0] ** 2 * eps11_itp + \
+                                             2 * neighbor[j, 0] * neighbor[j, 1] * eps12_itp + \
+                                             neighbor[j, 1] ** 2 * eps22_itp))
+                verts[idx] = Vertex(idx, x, y, ns, dists)
+    return (verts)
+
+
 def const_adj_list(vertex, target_area, eps11, eps12, eps22, x, y, v):
     e = 0
     neighbor = np.array([[-1, -1],
-                        [-1, 0],
-                        [-1, 1],
-                        [0, -1],
-                        [0, 1],
-                        [1, -1],
-                        [1, 0],
-                        [1, 1]])
-    #neighbor = np.array([[-1, 0],
+                         [-1, 0],
+                         [-1, 1],
+                         [0, -1],
+                         [0, 1],
+                         [1, -1],
+                         [1, 0],
+                         [1, 1]])
+    # neighbor = np.array([[-1, 0],
     #                    [0, -1],
     #                    [0, 1],
     #                    [1, 0]])
     adjacency_list = []
 
     #     inverse
-    eps_11 = eps22 / (eps11*eps22 - eps12*eps12)
-    eps_12 = -eps12 / (eps11*eps22 - eps12*eps12)
-    eps_22 = eps11 / (eps11*eps22 - eps12*eps12)
+    eps_11 = eps22 / (eps11 * eps22 - eps12 * eps12)
+    eps_12 = -eps12 / (eps11 * eps22 - eps12 * eps12)
+    eps_22 = eps11 / (eps11 * eps22 - eps12 * eps12)
 
     for i in range(v):
         for j in range(neighbor.shape[0]):
             #             inverse
-            if target_area[vertex[i, 0]+neighbor[j, 0], vertex[i, 1]+neighbor[j, 1]]==1:
+            if target_area[vertex[i, 0] + neighbor[j, 0], vertex[i, 1] + neighbor[j, 1]] == 1:
                 eps11_itp = (eps_11[vertex[i, 0] + neighbor[j, 0], vertex[i, 1] + neighbor[j, 1]] +
                              eps_11[vertex[i, 0], vertex[i, 1]]) / 2
                 eps12_itp = (eps_12[vertex[i, 0] + neighbor[j, 0], vertex[i, 1] + neighbor[j, 1]] +
                              eps_12[vertex[i, 0], vertex[i, 1]]) / 2
                 eps22_itp = (eps_22[vertex[i, 0] + neighbor[j, 0], vertex[i, 1] + neighbor[j, 1]] +
                              eps_22[vertex[i, 0], vertex[i, 1]]) / 2
-                #eps11_itp = eps_11[vertex[i, 0], vertex[i, 1]]
-                #eps12_itp = eps_12[vertex[i, 0], vertex[i, 1]]
-                #eps22_itp = eps_22[vertex[i, 0], vertex[i, 1]]
+                # eps11_itp = eps_11[vertex[i, 0], vertex[i, 1]]
+                # eps12_itp = eps_12[vertex[i, 0], vertex[i, 1]]
+                # eps22_itp = eps_22[vertex[i, 0], vertex[i, 1]]
 
-                #dist = neighbor[j, 0] ** 2 * eps11_itp + \
+                # dist = neighbor[j, 0] ** 2 * eps11_itp + \
                 #       2 * neighbor[j, 0] * neighbor[j, 1] * eps12_itp + \
                 #       neighbor[j, 1] ** 2 * eps22_itp
                 dist = np.sqrt(neighbor[j, 0] ** 2 * eps11_itp + \
-                       2 * neighbor[j, 0] * neighbor[j, 1] * eps12_itp + \
-                       neighbor[j, 1] ** 2 * eps22_itp)
+                               2 * neighbor[j, 0] * neighbor[j, 1] * eps12_itp + \
+                               neighbor[j, 1] ** 2 * eps22_itp)
 
                 nx = np.argwhere(x == (vertex[i, 0] + neighbor[j, 0]))
                 ny = np.argwhere(y == (vertex[i, 1] + neighbor[j, 1]))
@@ -161,6 +165,7 @@ def const_path(start, v, visited, predecessor):
 
     return path
 
+
 def dijkstra(edge_list, first_arc, dist_from_origin, v, visited, predecessor):
     k = 1
     for i in range(v):
@@ -182,20 +187,19 @@ def dijkstra(edge_list, first_arc, dist_from_origin, v, visited, predecessor):
     return predecessor, visited, dist_from_origin
 
 
-def shortpath(tensor_field, mask, start_coordinate, end_coordinate, metric='', filename = ''):
-
+def shortpath(tensor_field, mask, start_coordinate, end_coordinate, metric='', filename=''):
     print(f"Finding shortest path from {start_coordinate} to {end_coordinate}")
-    
+
     eps11 = tensor_field[0, :, :]
     eps12 = tensor_field[1, :, :]
     eps22 = tensor_field[2, :, :]
 
     # inverse
-    #eps11 = np.where(eps11 == 1, 5e-1, eps11)
-    #eps22 = np.where(eps22 == 1, 5e-1, eps22)
+    # eps11 = np.where(eps11 == 1, 5e-1, eps11)
+    # eps22 = np.where(eps22 == 1, 5e-1, eps22)
 
     # apply scaling field
-    if metric=='withscaling':
+    if metric == 'withscaling':
         scaling_field = np.loadtxt(open("input/e_alpha_kris.csv", "rb"), delimiter=",")
         eps11 = eps11 * scaling_field
         eps12 = eps12 * scaling_field
@@ -208,8 +212,8 @@ def shortpath(tensor_field, mask, start_coordinate, end_coordinate, metric='', f
     vertex = np.concatenate((x.reshape(-1, 1), y.reshape(-1, 1)), 1)
 
     # get index of the start and the end point
-    idx_matchx = np.where(vertex[:,0]==start_coordinate[0])
-    idx_matchy = np.where(vertex[:,1]==start_coordinate[1])
+    idx_matchx = np.where(vertex[:, 0] == start_coordinate[0])
+    idx_matchy = np.where(vertex[:, 1] == start_coordinate[1])
     idx_start = np.intersect1d(idx_matchx, idx_matchy)
     idx_start = idx_start[0]
 
@@ -252,86 +256,86 @@ def shortpath(tensor_field, mask, start_coordinate, end_coordinate, metric='', f
         i = i + 1
 
     if filename:
-      io.writePath(shortpath_points_x, shortpath_points_y, filename)
-      
+        io.writePath(shortpath_points_x, shortpath_points_y, filename)
+
     return shortpath_points_x, shortpath_points_y, dist_from_origin
 
+
 def dijkstra2(vertex_list):
-  # assumes source vertex already has minimum distance set
-  indices = list(vertex_list.keys())
-  while len(indices) > 0:
-    min_idx = -1
-    min_i = -1
-    min_dist = np.inf
-    for i in range(len(indices)):
-      idx = indices[i]
-      if (not vertex_list[idx].visited) and vertex_list[idx].dist_to_start < min_dist:
-        min_idx = idx
-        min_i = i
-        min_dist = vertex_list[idx].dist_to_start
+    # assumes source vertex already has minimum distance set
+    indices = list(vertex_list.keys())
+    while len(indices) > 0:
+        min_idx = -1
+        min_i = -1
+        min_dist = np.inf
+        for i in range(len(indices)):
+            idx = indices[i]
+            if (not vertex_list[idx].visited) and vertex_list[idx].dist_to_start < min_dist:
+                min_idx = idx
+                min_i = i
+                min_dist = vertex_list[idx].dist_to_start
 
-    vert = vertex_list[min_idx]
-    indices.pop(min_i)
-    vert.visited = True
-    for n,d in zip(vert.neighbors, vert.dists):
-      if vert.dist_to_start + d < vertex_list[n].dist_to_start:
-        vertex_list[n].dist_to_start = vert.dist_to_start + d
-        vertex_list[n].parent = min_idx
+        vert = vertex_list[min_idx]
+        indices.pop(min_i)
+        vert.visited = True
+        for n, d in zip(vert.neighbors, vert.dists):
+            if vert.dist_to_start + d < vertex_list[n].dist_to_start:
+                vertex_list[n].dist_to_start = vert.dist_to_start + d
+                vertex_list[n].parent = min_idx
 
-  return()
+    return ()
 
-  
-def shortpath2(tensor_field, mask, start_coordinate, end_coordinate, filename = ''):
 
-  print(f"Finding shortest path from {start_coordinate} to {end_coordinate}")
-    
-  eps11 = tensor_field[0, :, :]
-  eps12 = tensor_field[1, :, :]
-  eps22 = tensor_field[2, :, :]
+def shortpath2(tensor_field, mask, start_coordinate, end_coordinate, filename=''):
+    print(f"Finding shortest path from {start_coordinate} to {end_coordinate}")
 
-  # inverse
-  #eps11 = np.where(eps11 == 1, 5e-1, eps11)
-  #eps22 = np.where(eps22 == 1, 5e-1, eps22)
+    eps11 = tensor_field[0, :, :]
+    eps12 = tensor_field[1, :, :]
+    eps22 = tensor_field[2, :, :]
 
-  # construct vertices
-  vertex_list = const_vertex_list(mask, eps11, eps12, eps22)
+    # inverse
+    # eps11 = np.where(eps11 == 1, 5e-1, eps11)
+    # eps22 = np.where(eps22 == 1, 5e-1, eps22)
 
-  # calculate the shortest path
-  idx_start = np.ravel_multi_index(start_coordinate, mask.shape)
-  idx_end = np.ravel_multi_index(end_coordinate, mask.shape)
-    
-  vertex_list[idx_start].dist_to_start = 0
-    
-  dijkstra2(vertex_list)
+    # construct vertices
+    vertex_list = const_vertex_list(mask, eps11, eps12, eps22)
 
-  # construct path list
-  # skip constructing all possible paths, instead just do from idx_end
-  #paths = const_path2(vertex_list)
+    # calculate the shortest path
+    idx_start = np.ravel_multi_index(start_coordinate, mask.shape)
+    idx_end = np.ravel_multi_index(end_coordinate, mask.shape)
 
-  # display
-  i = 0
-  shortpath_points_x = []
-  shortpath_points_y = []
-  dist_to_start = vertex_list[idx_end].dist_to_start
+    vertex_list[idx_start].dist_to_start = 0
 
-  cur_idx = idx_end
+    dijkstra2(vertex_list)
 
-  if not mask[end_coordinate[0], end_coordinate[1]]:
-    print(f"end coordinate {end_coordinate} not in masked region")
+    # construct path list
+    # skip constructing all possible paths, instead just do from idx_end
+    # paths = const_path2(vertex_list)
+
+    # display
+    i = 0
+    shortpath_points_x = []
+    shortpath_points_y = []
+    dist_to_start = vertex_list[idx_end].dist_to_start
+
+    cur_idx = idx_end
+
+    if not mask[end_coordinate[0], end_coordinate[1]]:
+        print(f"end coordinate {end_coordinate} not in masked region")
+        return shortpath_points_x, shortpath_points_y, dist_to_start
+
+    while cur_idx != idx_start:
+        try:
+            shortpath_points_x.append(vertex_list[cur_idx].x)
+            shortpath_points_y.append(vertex_list[cur_idx].y)
+            cur_idx = vertex_list[cur_idx].parent
+        except:
+            print(f"error. {cur_idx}, {idx_start}")
+
+    shortpath_points_x.append(vertex_list[idx_start].x)
+    shortpath_points_y.append(vertex_list[idx_start].y)
+
+    if filename:
+        io.writePath(shortpath_points_x, shortpath_points_y, filename)
+
     return shortpath_points_x, shortpath_points_y, dist_to_start
-  
-  while cur_idx != idx_start:
-    try:
-      shortpath_points_x.append(vertex_list[cur_idx].x)
-      shortpath_points_y.append(vertex_list[cur_idx].y)
-      cur_idx = vertex_list[cur_idx].parent
-    except:
-      print(f"error. {cur_idx}, {idx_start}")
-
-  shortpath_points_x.append(vertex_list[idx_start].x)
-  shortpath_points_y.append(vertex_list[idx_start].y)
-
-  if filename:
-      io.writePath(shortpath_points_x, shortpath_points_y, filename)
-
-  return shortpath_points_x, shortpath_points_y, dist_to_start
