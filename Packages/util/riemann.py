@@ -98,6 +98,11 @@ def covariant_derivative_2d(vector_lin, metric_mat, mask, differential_accuracy=
 
     vgammav = fw.zeros_like(vector_lin)
     Gamma1, Gamma2 = get_christoffel_symbol_2d(metric_mat, mask, differential_accuracy)
+
+    if fw_name == 'torch':
+        Gamma1 = Gamma1.to(vector_lin.device)
+        Gamma2 = Gamma2.to(vector_lin.device)
+
     vgammav[0] = fw.einsum('i...,i...->...', vector_lin, fw.einsum('...ij,j...->i...', Gamma1, vector_lin))
     vgammav[1] = fw.einsum('i...,i...->...', vector_lin, fw.einsum('...ij,j...->i...', Gamma2, vector_lin))
 
