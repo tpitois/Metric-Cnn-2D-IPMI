@@ -92,6 +92,8 @@ def covariant_derivative_2d(vector_lin, metric_mat, mask, differential_accuracy=
     fw, fw_name = get_framework(vector_lin)
 
     dv = get_jacobian_2d(vector_lin, mask, differential_accuracy)
+    if fw_name == 'torch':
+        dv = dv.to(vector_lin.device)
     dvv = fw.einsum('...ij,j...->i...', dv, vector_lin)
 
     vgammav = fw.zeros_like(vector_lin)

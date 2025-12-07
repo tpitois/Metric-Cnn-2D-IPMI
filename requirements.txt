@@ -1,20 +1,20 @@
 # Core numerical and data libraries
-numpy==1.19.5
+numpy
 scipy
-PyYAML==6.0
+PyYAML
 
 # Deep Learning
-torch==1.10.2
+torch
 
 # Image Processing and IO
-SimpleITK==2.2.1
-scikit-image==0.18.3
+SimpleITK
+scikit-image
 itk
 
 
 # Visualization and Plotting
-matplotlib==3.3.1
-tqdm==4.55.0
+matplotlib
+tqdm
 ipywidgets
 pyvista
 itkwidgets
