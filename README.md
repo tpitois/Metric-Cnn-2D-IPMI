@@ -1,9 +1,11 @@
 # Modeling the Shape of the Brain Connectome via Deep Neural Networks
 
-## Notebooks
+## Notebooks 03_3-braids-generated.ipynb
 - [2 braids used in original repo](Notebooks/00_2-braids-file.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/00_2-braids-file.ipynb)
 - [2 braids generated](Notebooks/01_2-braids-generated.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/01_2-braids-generated.ipynb)
 - [HPC DWI](Notebooks/02_explore-hcp.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/02_explore-hcp.ipynb)
+- [3 braids generated](Notebooks/03_3-braids-generated.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/03_3-braids-generated.ipynb)
+
 ### [Paper](https://arxiv.org/pdf/2203.06122.pdf) | [Slides](https://users.cs.utah.edu/~haocheng/slides/ipmi2023.pdf)
 
 PyTorch implementation of estimating a Riemannian manifold accommodating brain connectome faithfully.<br><br>
