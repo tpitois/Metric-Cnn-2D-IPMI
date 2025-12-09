@@ -5,7 +5,7 @@
 - [2 braids generated](Notebooks/01_2-braids-generated.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/01_2-braids-generated.ipynb)
 - [HPC DWI](Notebooks/02_explore-hcp.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/02_explore-hcp.ipynb)
 - [3 branching](Notebooks/03_3_branching.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/03_3_branching.ipynb)
-- [3 branching](Notebooks/04_3_branching_cross.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/03_3_branching_cross.ipynb)
+- [3 branching cross](Notebooks/04_3_branching_cross.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tpitois/Metric-Cnn-2D-IPMI/blob/main/Notebooks/04_3_branching_cross.ipynb)
 
 ### [Paper](https://arxiv.org/pdf/2203.06122.pdf) | [Slides](https://users.cs.utah.edu/~haocheng/slides/ipmi2023.pdf)
 
