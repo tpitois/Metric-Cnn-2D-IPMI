@@ -6,13 +6,27 @@ from util import riemann, tensors
 
 
 class ImageDataset(Dataset):
-    def __init__(self, vector_field, mask):
+    def __init__(self, vector_fields, masks):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.sample = {
-            'vector_field':vector_field.permute(2, 0, 1).to(device).float() * 1000.0,
-            'mask': mask.permute(1, 0).float().to(device).unsqueeze(0)
-        }
+        if len(vector_fields) == 1:
+            self.sample = {
+                'vector_field':vector_fields.permute(2, 0, 1).to(device).float() * 1000.0,
+                'mask': masks.permute(1, 0).float().to(device).unsqueeze(0)
+            }
+        else:
+            self.sample = {
+                'vector_field': torch.cat(
+                    [
+                        vector_field.permute(2, 0, 1).to(device).float() * 1000.0
+                        for vector_field in vector_fields
+                    ],
+                    dim=0
+                ), 'masks': [
+                    mask.permute(1, 0).float().to(device).unsqueeze(0)
+                    for mask in masks
+                ]
+            }
 
     def __len__(self):
         return 1
